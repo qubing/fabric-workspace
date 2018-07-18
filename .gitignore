@@ -1,2 +1,5 @@
+.idea
 **/*/hfc-key-store
 **/*/node_modules
+*.tx
+*.block
