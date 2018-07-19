@@ -1,5 +1,11 @@
 .idea
 **/*/hfc-key-store
 **/*/node_modules
+**/*/crypto-config/**
 *.tx
 *.block
+*.tar
+*.gz
+*.zip
+
+**/*/fabric-bin/bin/*
