@@ -1,0 +1,47 @@
+#
+# base.yaml(DEV)
+#
+
+version: '2'
+
+services:
+  peer-base:
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_bc-dev
+      #- CORE_LOGGING_LEVEL=ERROR
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+
+  db-base:
+    image: hyperledger/fabric-couchdb:${FABRIC_VERSION}
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+
+  cli-base:
+    container_name: cli
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_ID=cli
+      - CORE_PEER_TLS_ENABLED=false
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer/scripts
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/

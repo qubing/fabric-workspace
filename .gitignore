@@ -9,3 +9,4 @@
 *.zip
 
 **/*/fabric-bin/bin/*
+**/*/fabric-dev/base/docker-compose-base.yaml
